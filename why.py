@@ -9,6 +9,20 @@ from cryptography.hazmat.primitives.asymmetric import ec
 from cryptography.hazmat.primitives import serialization
 from concurrent.futures import ThreadPoolExecutor, as_completed
 import threading
+import sys
+import subprocess
+def ensure_dependencies():
+    required = [
+        "colorama",
+        "requests",
+        "cryptography"
+    ]
+    for pkg in required:
+        try:
+            __import__(pkg)
+        except ImportError:
+            print(f"[INFO] Installing missing dependency: {pkg}")
+            subprocess.check_call([sys.executable, "-m", "pip", "install", pkg])
 
 def print_banner():
     banner = r"""
@@ -289,6 +303,7 @@ def main_menu():
 
 if __name__ == "__main__":
     try:
+        ensure_dependencies()
         main_menu()
     except KeyboardInterrupt:
         print("\n" + Fore.RED + "Exiting due to keyboard interrupt." + Style.RESET_ALL)
